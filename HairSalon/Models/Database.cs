@@ -10,5 +10,14 @@ namespace HairSalon.Models
         {
             return new MySqlConnection(DBConfiguration.ConnectionString);
         }
+
+        public static void Close(MySqlConnection conn)
+        {
+            conn.Close();
+            if(conn != null)
+            {
+                conn.Dispose();
+            }
+        }
     }
 }

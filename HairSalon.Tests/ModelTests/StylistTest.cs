@@ -33,6 +33,17 @@ namespace HairSalon.Tests
         }
 
         [TestMethod]
+        public void Stylist_Save_DoesNothingWhenSavingTwice()
+        {
+            Stylist doubleGuy = new Stylist("Harry Houdini");
+
+            doubleGuy.Save();
+            doubleGuy.Save();
+
+            Assert.AreEqual(1, Stylist.GetAll().Length);
+        }
+
+        [TestMethod]
         public void Stylist_GetByID_ReturnsCorrectStylist()
         {
             Stylist stylist1 = new Stylist("Monica");
@@ -45,6 +56,7 @@ namespace HairSalon.Tests
             Assert.AreEqual(stylist1.GetName(), s1FromDB.GetName());
         }
 
+        [TestMethod]
         public void Stylist_GetByName_ReturnsCorrectResult()
         {
             Stylist newStylist = new Stylist("Monica");
