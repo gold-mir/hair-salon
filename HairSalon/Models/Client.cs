@@ -17,6 +17,13 @@ namespace HairSalon.Models
             _id = -1;
         }
 
+        private Client(string name, int stylistID)
+        {
+            _name = name;
+            _stylistID = stylistID;
+            _id = -1;
+        }
+
         public string GetName()
         {
             return _name;
@@ -34,12 +41,47 @@ namespace HairSalon.Models
 
         public Stylist GetStylist()
         {
-            throw new NotImplementedException();
+            Stylist result = null;
+            if(_stylistID == -1)
+            {
+                throw new Exception("Stylist id is -1. Did you forget to save it first?");
+            }
+
+            try
+            {
+                result = Stylist.GetByID(_stylistID);
+            } catch (MySqlException ex)
+            {
+                throw new Exception("Provided Stylist ID is not a real id");
+            }
+            return result;
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            if(_id != -1)
+            {
+                return;
+            } else if (_stylistID == -1)
+            {
+                throw new Exception("Cannot save client becasue stylist id is -1. Did you forget to save it first?");
+            }
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"INSERT INTO clients (name, stylist_id) VALUES (@Name, {_stylistID});";
+
+            MySqlParameter insertName = new MySqlParameter();
+            insertName.ParameterName = "@Name";
+            insertName.Value = _name;
+            cmd.Parameters.Add(insertName);
+
+            cmd.ExecuteNonQuery();
+            _id = (int)cmd.LastInsertedId;
+
+            DB.Close(conn);
         }
 
         public static void DeleteAll()
@@ -56,12 +98,53 @@ namespace HairSalon.Models
 
         public static Client[] GetAll()
         {
-            throw new NotImplementedException();
+            List<Client> result  = new List<Client>();
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM clients;";
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            while(rdr.Read())
+            {
+                int newID = rdr.GetInt32(0);
+                string newName = rdr.GetString(1);
+                int newStylistId = rdr.GetInt32(2);
+
+                Client newClient = new Client(newName, newStylistId);
+                newClient._id = newID;
+                result.Add(newClient);
+            }
+
+            DB.Close(conn);
+
+            return result.ToArray();
         }
 
         public static Client GetByID(int id)
         {
-            throw new NotImplementedException();
+            Client result = null;
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"SELECT * FROM clients WHERE id = {id};";
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            while(rdr.Read())
+            {
+                int newID = rdr.GetInt32(0);
+                string newName = rdr.GetString(1);
+                int newStylistId = rdr.GetInt32(2);
+
+                Client newClient = new Client(newName, newStylistId);
+                newClient._id = newID;
+                result = newClient;
+            }
+
+            return result;
         }
     }
 }

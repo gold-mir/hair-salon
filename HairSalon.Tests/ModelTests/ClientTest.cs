@@ -83,6 +83,26 @@ namespace HairSalon.Tests
         }
 
         [TestMethod]
+        public void Client_GetStylist_ErrorsOnBadID()
+        {
+            Stylist newGuy = new Stylist("Paul");
+            Client client = new Client("Also Paul", newGuy);
+
+            Exception ex = null;
+
+            try
+            {
+                client.GetStylist();
+            } catch (Exception e)
+            {
+                ex = e;
+            }
+
+            Assert.IsNotNull(ex);
+            Assert.AreEqual("Stylist id is -1. Did you forget to save it first?", ex.Message);
+        }
+
+        [TestMethod]
         public void Client_GetByID_ReturnsCorrectResult()
         {
             Client newClient = new Client("Miranda", defaultStylist);
