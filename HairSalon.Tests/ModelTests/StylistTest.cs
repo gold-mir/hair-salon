@@ -12,11 +12,11 @@ namespace HairSalon.Tests
 
         public void Dispose()
         {
-            DB.Clear();
+            Stylist.DeleteAll();
         }
 
         [TestMethod]
-        public void Stylist_GetAllInitiallyEmpty
+        public void Stylist_GetAllInitiallyEmpty()
         {
             Assert.AreEqual(0, Stylist.GetAll().Length);
         }
