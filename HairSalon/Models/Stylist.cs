@@ -56,7 +56,7 @@ namespace HairSalon.Models
 
         public Client[] GetClients()
         {
-            throw new NotImplementedException();
+            return Client.GetClientsOfStylist(this);
         }
 
         public static Stylist[] GetAll()

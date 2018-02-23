@@ -112,5 +112,18 @@ namespace HairSalon.Tests
 
             Assert.AreEqual(newClient.GetName(), newClientFromDB.GetName());
         }
+
+        [TestMethod]
+        public void Client_GetClientsOfStylist_ReturnsCorrectResults()
+        {
+            Client client1 = new Client("Miranda", defaultStylist);
+            Client client2 = new Client("Sarah", defaultStylist);
+            client1.Save();
+            client2.Save();
+
+            Client[] clients = Client.GetClientsOfStylist(defaultStylist);
+
+            Assert.AreEqual(2, clients.Length);
+        }
     }
 }

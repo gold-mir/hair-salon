@@ -79,9 +79,10 @@ namespace HairSalon.Tests
         public void Stylist_GetClients_ReturnsCorrectClients()
         {
             Stylist newStylist = new Stylist("Susan");
+            newStylist.Save();
+            
             Client client1 = new Client("Sarah", newStylist);
             Client client2 = new Client("Irene", newStylist);
-            newStylist.Save();
             client1.Save();
             client2.Save();
 
