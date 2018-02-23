@@ -6,13 +6,33 @@ namespace HairSalon.Models
 {
     public class Stylist
     {
-        public string Name {get; set;}
-        public int ID {get;}
+        protected int id;
+        private string name;
 
-        public Stylist(string name, int id)
+        public Stylist(string name)
         {
-            Name = name;
-            ID = id;
+            this.name = name;
+            this.id = -1;
+        }
+
+        public int GetID()
+        {
+            return id;
+        }
+
+        public string GetName()
+        {
+            return name;
+        }
+
+        public void SetName(string newName)
+        {
+            name = newName;
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
         }
 
         public static Stylist[] GetAll()
@@ -31,7 +51,9 @@ namespace HairSalon.Models
             {
                 int id = rdr.GetInt32(0);
                 string name = rdr.GetString(1);
-                output.Add(new Stylist(name, id));
+                Stylist newStylist = new Stylist(name);
+                newStylist.id = id;
+                output.Add(newStylist);
             }
 
             conn.Close();
@@ -57,6 +79,16 @@ namespace HairSalon.Models
             {
                 conn.Dispose();
             }
+        }
+
+        public static Stylist GetByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Stylist[] GetByName(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 }
