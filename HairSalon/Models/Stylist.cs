@@ -54,6 +54,11 @@ namespace HairSalon.Models
             DB.Close(conn);
         }
 
+        public Client[] GetClients()
+        {
+            throw new NotImplementedException();
+        }
+
         public static Stylist[] GetAll()
         {
             MySqlConnection conn = DB.Connection();

@@ -52,7 +52,13 @@ namespace HairSalon.Models
                 result = Stylist.GetByID(_stylistID);
             } catch (MySqlException ex)
             {
-                throw new Exception("Provided Stylist ID is not a real id");
+                if(ex.Message.StartsWith("Cannot add or update a child row: a foreign key constraint fails"))
+                {
+                    throw new Exception("Provided Stylist ID is not a real id");
+                } else
+                {
+                    throw ex;
+                }
             }
             return result;
         }
