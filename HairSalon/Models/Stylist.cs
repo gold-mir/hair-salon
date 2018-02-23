@@ -1,4 +1,12 @@
+using System;
+
 namespace HairSalon.Models
 {
-  //model goes here
+    public class Stylist
+    {
+        public static Stylist[] GetAll()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
