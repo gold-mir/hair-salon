@@ -80,7 +80,7 @@ namespace HairSalon.Tests
         {
             Stylist newStylist = new Stylist("Susan");
             newStylist.Save();
-            
+
             Client client1 = new Client("Sarah", newStylist);
             Client client2 = new Client("Irene", newStylist);
             client1.Save();
@@ -89,6 +89,14 @@ namespace HairSalon.Tests
             Client[] clients = newStylist.GetClients();
 
             Assert.AreEqual(2, clients.Length);
+        }
+
+        [TestMethod]
+        public void Stylist_GetByID_NullForNonexistentID()
+        {
+            Stylist newStylist = Stylist.GetByID(0);
+
+            Assert.IsNull(newStylist);
         }
     }
 }
