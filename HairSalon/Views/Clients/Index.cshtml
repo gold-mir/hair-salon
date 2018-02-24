@@ -1,0 +1,15 @@
+@{
+    Layout = "_Layout";
+}
+
+<h3>All Clients</h3>
+
+<ul>
+    @foreach(var client in Model)
+    {
+        <li><a href="/clients/@client.GetID()">@client.GetName()</a></li>
+    }
+</ul>
+
+<a href="/clients/new">Add Clients</a><br>
+<a href="/">Back Home</a>

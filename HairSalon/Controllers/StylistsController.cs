@@ -9,7 +9,7 @@ namespace HairSalon.Controllers
         [HttpGet("/stylists")]
         public ActionResult Index()
         {
-            return View();
+            return View(Stylist.GetAll());
         }
 
         [HttpGet("/stylists/new")]
@@ -21,25 +21,43 @@ namespace HairSalon.Controllers
         [HttpPost("/stylists")]
         public ActionResult Create()
         {
-            return View();
+            string name = Request.Form["stylist-name"];
+            if(name == "")
+            {
+                return View("New", "Name cannot be empty.");
+            } else {
+                Stylist stylist = new Stylist(name);
+                stylist.Save();
+                return View("Index", Stylist.GetAll());
+            }
         }
 
         [HttpGet("/stylists/{id}")]
         public ActionResult Details(int id)
         {
-            return View();
-        }
-
-        [HttpGet("/stylists/{id}/clients")]
-        public ActionResult ClientList(int id)
-        {
-            return View();
+            Stylist stylist = Stylist.GetByID(id);
+            if(stylist != null)
+            {
+                return View(stylist);
+            } else {
+                Response.StatusCode = 404;
+                return View("NotFound");
+            }
         }
 
         [HttpGet("/stylists/{stylistID}/clients/{clientID}")]
         public ActionResult ClientInfo(int stylistID, int clientID)
         {
-            return View();
+            Stylist stylist = Stylist.GetByID(stylistID);
+            Client client = Client.GetByID(clientID);
+
+            if(stylist != null && client != null)
+            {
+                return View(client);
+            } else {
+                Response.StatusCode = 404;
+                return View("NotFound");
+            }
         }
     }
 }

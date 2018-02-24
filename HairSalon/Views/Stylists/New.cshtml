@@ -1,0 +1,14 @@
+@{
+    Layout = "_Layout";
+}
+
+@if(Model != null)
+{
+    <h2 class="error">@Model</h2>
+}
+
+<form action="/stylists" method="post">
+    <label>New Stylist's Name: <input type="text" name="stylist-name"></label>
+    @* <label><textarea name="stylist-description" rows="8" cols="80"></textarea></label> *@
+    <button type="submit">Add Stylist</button>
+</form>

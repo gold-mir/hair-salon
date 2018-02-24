@@ -1,0 +1,17 @@
+@{
+    Layout = "_Layout";
+}
+
+<form action="/clients" method="post">
+    <div>
+        Select Stylist
+        <select name="stylist-select">
+            @foreach(var stylist in Model)
+            {
+                <option value="@stylist.GetID()">@stylist.GetName()</option>
+            }
+        </select>
+    </div>
+    <label>Client Name:<input type="text" name="client-name" required></label>
+    <button type="submit">Add Client</button>
+</form>

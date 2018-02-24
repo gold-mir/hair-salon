@@ -1,0 +1,11 @@
+@{
+    Layout = "_Layout";
+    var stylist = Model.GetStylist();
+}
+
+<h2>@Model.GetName()</h2>
+
+<h2>Seen by: <a href="/stylists/@stylist.GetID()">@(stylist.GetName())</a></h2>
+
+
+<a href="/stylists/@stylist.GetID()">Back to client list for @stylist.GetName()</a>

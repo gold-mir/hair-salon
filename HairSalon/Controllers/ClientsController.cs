@@ -9,25 +9,44 @@ namespace HairSalon.Controllers
         [HttpGet("/clients")]
         public ActionResult Index()
         {
-            return View();
+            return View(Client.GetAll());
         }
 
         [HttpGet("/clients/new")]
         public ActionResult New()
         {
-            return View();
+            return View(Stylist.GetAll());
         }
 
         [HttpPost("/clients")]
         public ActionResult Create()
         {
-            return View();
+            string name = Request.Form["client-name"];
+            int id = int.Parse(Request.Form["stylist-select"]);
+
+            Stylist stylist = Stylist.GetByID(id);
+
+            if(stylist == null || name == "")
+            {
+                return View("Error");
+            }
+
+            Client client = new Client(name, stylist);
+            client.Save();
+            return View("Index", Client.GetAll());
         }
 
         [HttpGet("/clients/{id}")]
         public ActionResult Details(int id)
         {
-            return View();
+            Client client = Client.GetByID(id);
+            if(client != null)
+            {
+                return View(client);
+            } else {
+                Response.StatusCode = 404;
+                return View("NotFound");
+            }
         }
     }
 }
