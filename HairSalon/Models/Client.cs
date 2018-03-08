@@ -10,11 +10,11 @@ namespace HairSalon.Models
         private int _id;
         private string _name;
 
-        public Client(string name, Stylist stylist)
+        public Client(string name, Stylist stylist, int id = -1)
         {
             _name = name;
             _stylistID = stylist.GetID();
-            _id = -1;
+            _id = id;
         }
 
         private Client(string name, int stylistID)
@@ -31,6 +31,25 @@ namespace HairSalon.Models
 
         public void SetName(string name)
         {
+            if(_id == -1)
+            {
+                _name = name;
+            } else {
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"UPDATE clients SET name = @Name WHERE id = {_id};";
+
+                MySqlParameter insertName = new MySqlParameter();
+                insertName.ParameterName = "@Name";
+                insertName.Value = name;
+                cmd.Parameters.Add(insertName);
+
+                cmd.ExecuteNonQuery();
+
+                DB.Close(conn);
+            }
             _name = name;
         }
 
@@ -88,6 +107,47 @@ namespace HairSalon.Models
             _id = (int)cmd.LastInsertedId;
 
             DB.Close(conn);
+        }
+
+        public void Delete()
+        {
+            if(_id == -1)
+            {
+                throw new Exception("Can't delete a client that hasn't been saved.");
+            } else {
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"DELETE FROM clients WHERE id = {_id};";
+                cmd.ExecuteNonQuery();
+
+                DB.Close(conn);
+                _id = -1;
+            }
+        }
+
+        public void SetStylist(Stylist newStylist)
+        {
+            if(newStylist.GetID() == -1)
+            {
+                throw new Exception("Can't add an unsaved stylist to a client.");
+            } else if (_id == -1)
+            {
+                _stylistID = newStylist.GetID();
+            } else {
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"UPDATE clients SET stylist_id = {newStylist.GetID()} WHERE id = {_id};";
+
+                cmd.ExecuteNonQuery();
+
+                DB.Close(conn);
+
+                _stylistID = newStylist.GetID();
+            }
         }
 
         public static void DeleteAll()

@@ -9,10 +9,10 @@ namespace HairSalon.Models
         private int _id;
         private string _name;
 
-        public Stylist(string name)
+        public Stylist(string name, int id = -1)
         {
             _name = name;
-            _id = -1;
+            _id = id;
         }
 
         public int GetID()
@@ -27,7 +27,25 @@ namespace HairSalon.Models
 
         public void SetName(string newName)
         {
-            _name = newName;
+            if(_id == -1)
+            {
+                _name = newName;
+            } else {
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"UPDATE stylists SET name = @Name WHERE id = {_id};";
+
+                MySqlParameter insertName = new MySqlParameter();
+                insertName.ParameterName = "@Name";
+                insertName.Value = newName;
+                cmd.Parameters.Add(insertName);
+
+                cmd.ExecuteNonQuery();
+
+                DB.Close(conn);
+            }
         }
 
         public void Save()
@@ -54,9 +72,75 @@ namespace HairSalon.Models
             DB.Close(conn);
         }
 
+        public void Delete()
+        {
+            if(_id == -1)
+            {
+                throw new Exception("Can't delete a stylist that hasn't been saved to the database.");
+            } else {
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"DELETE FROM stylists WHERE id = {_id};";
+                cmd.ExecuteNonQuery();
+
+                DB.Close(conn);
+                _id = -1;
+            }
+        }
+
         public Client[] GetClients()
         {
             return Client.GetClientsOfStylist(this);
+        }
+
+        public void AddSpecialty(Specialty specialty)
+        {
+            if(specialty.GetID() == -1 || _id == -1)
+            {
+                throw new Exception("Can't add a specialty unless both objects are saved;");
+            }
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"INSERT INTO stylists_specialties (stylist_id, specialty_id) VALUES ({_id}, {specialty.GetID()});";
+
+            cmd.ExecuteNonQuery();
+
+            DB.Close(conn);
+        }
+
+        public Specialty[] GetSpecialties()
+        {
+            if(_id == -1)
+            {
+                throw new Exception("Can't perform this operation without saving first.");
+            }
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"SELECT specialties.* FROM specialties JOIN stylists_specialties ON specialties.id = stylists_specialties.specialty_id WHERE stylists_specialties.stylist_id = {_id};";
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            List<Specialty> output = new List<Specialty> ();
+
+            while(rdr.Read())
+            {
+                int id = rdr.GetInt32(0);
+                string name = rdr.GetString(1);
+
+                output.Add(new Specialty(name, id));
+            }
+
+            DB.Close(conn);
+
+            return output.ToArray();
         }
 
         public static Stylist[] GetAll()

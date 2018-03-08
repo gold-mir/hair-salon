@@ -7,13 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HairSalon.Tests
 {
     [TestClass]
-    public class ClientTest  : DBTest, IDisposable
+    public class ClientTest  : DBTest
     {
-        public void Dispose()
-        {
-            Stylist.DeleteAll();
-            Client.DeleteAll();
-        }
 
         public Stylist defaultStylist;
 
@@ -124,6 +119,46 @@ namespace HairSalon.Tests
             Client[] clients = Client.GetClientsOfStylist(defaultStylist);
 
             Assert.AreEqual(2, clients.Length);
+        }
+
+        [TestMethod]
+        public void Client_Delete_DeletesClient()
+        {
+            Client newClient = new Client("Miranda", defaultStylist);
+            newClient.Save();
+            int id = newClient.GetID();
+
+            newClient.Delete();
+            Client fromDB = Client.GetByID(id);
+
+            Assert.IsNull(fromDB);
+            Assert.AreEqual(-1, newClient.GetID());
+        }
+
+        [TestMethod]
+        public void Client_SetName_ChangesName()
+        {
+            Client newClient = new Client("Miranda", defaultStylist);
+            newClient.Save();
+            string fixedName = "Mir";
+
+            newClient.SetName(fixedName);
+
+            Assert.AreEqual(newClient.GetName(), Client.GetByID(newClient.GetID()).GetName());
+        }
+
+        [TestMethod]
+        public void Client_SetStylist_ChangesStylist()
+        {
+            Client newClient = new Client("Miranda", defaultStylist);
+            Stylist newStylist = new Stylist("Dave");
+            newClient.Save();
+            newStylist.Save();
+
+            Stylist originalStylist = newClient.GetStylist();
+            newClient.SetStylist(newStylist);
+
+            Assert.AreNotEqual(originalStylist.GetName(), newStylist.GetName());
         }
     }
 }

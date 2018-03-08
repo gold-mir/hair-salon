@@ -7,14 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HairSalon.Tests
 {
     [TestClass]
-    public class StylistTest : DBTest, IDisposable
+    public class StylistTest : DBTest
     {
-
-        public void Dispose()
-        {
-            Stylist.DeleteAll();
-        }
-
         [TestMethod]
         public void Stylist_GetAllInitiallyEmpty()
         {
@@ -97,6 +91,58 @@ namespace HairSalon.Tests
             Stylist newStylist = Stylist.GetByID(0);
 
             Assert.IsNull(newStylist);
+        }
+
+        [TestMethod]
+        public void Stylist_Delete_DeletesStylist()
+        {
+            Stylist newStylist = new Stylist("Mir");
+            newStylist.Save();
+            int id = newStylist.GetID();
+
+            newStylist.Delete();
+            Stylist newStylistFromDB = Stylist.GetByID(id);
+
+            Assert.IsNull(newStylistFromDB);
+            Assert.AreEqual(-1, newStylist.GetID());
+        }
+
+        [TestMethod]
+        public void Stylist_SetName_ChangesStylistName()
+        {
+            Stylist newStylist = new Stylist("Miradna");
+            newStylist.Save();
+            string fixedName = "Miranda";
+
+            newStylist.SetName(fixedName);
+            Stylist withFixedName = Stylist.GetByID(newStylist.GetID());
+
+            Assert.AreEqual(fixedName, withFixedName.GetName());
+        }
+
+        [TestMethod]
+        public void Stylist_SetName_ChangesNameOfUnsavedStylist()
+        {
+            Stylist newStylist = new Stylist("Mir");
+
+            newStylist.SetName("Miranda");
+            newStylist.Save();
+
+            Assert.AreEqual("Miranda", Stylist.GetByID(newStylist.GetID()).GetName());
+        }
+
+        [TestMethod]
+        public void Stylist_GetSpecialties_GetsSpecialties()
+        {
+            Specialty newspec = new Specialty("Specialty Name");
+            newspec.Save();
+            Stylist newStylist = new Stylist("Miradna");
+            newStylist.Save();
+            newStylist.AddSpecialty(newspec);
+
+            Specialty[] specialties = newStylist.GetSpecialties();
+            Assert.AreEqual(specialties[0].GetID(), newspec.GetID());
+            Assert.AreEqual(1, specialties.Length);
         }
     }
 }
