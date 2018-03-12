@@ -1,0 +1,27 @@
+@using HairSalon.Models;
+@{
+    Layout = "_Layout";
+    var parentStylist = @Model.GetStylist();
+}
+
+<h2>Edit @Model.GetName()</h2>
+
+<form class="" action="/clients/@Model.GetID()/update" method="post">
+    <div>
+        Change Stylist
+        <select name="stylist-select">
+            @foreach(var stylist in Stylist.GetAll())
+            {
+                if(stylist.GetName() == parentStylist.GetName())
+                {
+                    <option value="@stylist.GetID()" selected>@stylist.GetName()</option>
+                } else
+                {
+                    <option value="@stylist.GetID()">@stylist.GetName()</option>
+                }
+            }
+        </select>
+    </div>
+    <label>Update Name<input type="text" name="name-input" value="@Model.GetName()"></label>
+    <button type="submit" name="button">Update</button>
+</form>

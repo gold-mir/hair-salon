@@ -104,7 +104,7 @@ namespace HairSalon.Controllers
                 stylist.SetName(name);
                 return Redirect($"/stylists/{id}");
             } else {
-                Response.StatusCode = 404;
+                Response.StatusCode = 500;
                 return View("Error");
             }
         }

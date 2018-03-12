@@ -7,7 +7,8 @@
 
 <h2>Seen by: <a href="/stylists/@stylist.GetID()">@(stylist.GetName())</a></h2>
 
-s<form class="" action="/clients/@Model.GetID()/delete" method="post">
+<a href="/clients/@Model.GetID()/edit"><button type="button" name="button">Edit @Model.GetName()</button> </a>
+<form class="" action="/clients/@Model.GetID()/delete" method="post">
     <button type="submit">Delete @Model.GetName()</button>
 </form>
 
