@@ -1,0 +1,10 @@
+@{
+    Layout = "_Layout";
+}
+
+<h2>Edit @Model.GetID()</h2>
+
+<form class="" action="/stylists/@Model.GetID()/update" method="post">
+    <label>Update Name<input type="text" name="name-input" value="@Model.GetName()"></label>
+    <button type="submit" name="button">Update</button>
+</form>

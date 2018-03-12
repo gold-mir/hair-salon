@@ -77,5 +77,36 @@ namespace HairSalon.Controllers
             Stylist.DeleteAll();
             return Redirect("/stylists");
         }
+
+        [HttpGet("/stylists/{id}/edit")]
+        public ActionResult Edit(int id)
+        {
+            Stylist stylist = Stylist.GetByID(id);
+
+            if(stylist != null)
+            {
+                return View(stylist);
+            } else
+            {
+                Response.StatusCode = 404;
+                return View("Error");
+            }
+        }
+
+        [HttpPost("/stylists/{id}/update")]
+        public ActionResult Update(int id)
+        {
+            Stylist stylist = Stylist.GetByID(id);
+
+            if(stylist != null)
+            {
+                string name = Request.Form["name-input"];
+                stylist.SetName(name);
+                return Redirect($"/stylists/{id}");
+            } else {
+                Response.StatusCode = 404;
+                return View("Error");
+            }
+        }
     }
 }
