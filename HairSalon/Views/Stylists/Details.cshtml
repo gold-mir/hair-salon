@@ -1,5 +1,7 @@
+@using HairSalon.Models;
 @{
     Layout = "_Layout";
+    var specialties = Model.GetSpecialties();
 }
 
 <h2>@Model.GetName()</h2>
@@ -12,6 +14,38 @@
     }
 </ul>
 
+<h4>Specialties:</h4>
+<ul>
+    @foreach(var specialty in Model.GetSpecialties())
+    {
+        <li><a href="/specialties/@specialty.GetID()">@specialty.GetName()</a></li>
+    }
+</ul>
+
+<form class="" action="/stylists/@Model.GetID()/addSpecialty" method="post">
+    <div>
+        Select Specialty
+        <select name="specialty-select">
+            @foreach(var specialty in Specialty.GetAll())
+            {
+                bool alreadySpecialized = false;
+                foreach(var currentSpecialty in specialties)
+                {
+                    if(specialty.GetID() == currentSpecialty.GetID())
+                    {
+                        alreadySpecialized = true;
+                    }
+                }
+                if(!alreadySpecialized)
+                {
+                    <option value="@specialty.GetID()">@specialty.GetName()</option>
+                }
+            }
+        </select>
+    </div>
+    <button type="submit" name="button">Add Specialty</button>
+</form>
+<br>
 <a href="/stylists/@Model.GetID()/edit"><button type="button" name="button">Edit @Model.GetName()</button></a>
 <form class="" action="/stylists/@Model.GetID()/delete" method="post">
     <button type="submit" name="button">Delete @Model.GetName()</button>

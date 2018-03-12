@@ -1,0 +1,13 @@
+@{
+    Layout = "_Layout";
+}
+
+@if(Model != null)
+{
+    <h2 class="error">@Model</h2>
+}
+
+<form action="/specialties" method="post">
+    <label>Specialty Name: <input type="text" name="specialty-name"></label>
+    <button type="submit">Add Specialty</button>
+</form>

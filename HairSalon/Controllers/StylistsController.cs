@@ -108,5 +108,27 @@ namespace HairSalon.Controllers
                 return View("Error");
             }
         }
+
+        [HttpPost("/stylists/{id}/addSpecialty")]
+        public ActionResult AddSpecialty(int id)
+        {
+            Stylist stylist = Stylist.GetByID(id);
+            if(stylist != null)
+            {
+                int specID = int.Parse(Request.Form["specialty-select"]);
+                Specialty spec = Specialty.GetByID(specID);
+                if(spec != null)
+                {
+                    stylist.AddSpecialty(spec);
+                    return Redirect($"/stylists/{id}");
+                } else {
+                    Response.StatusCode = 500;
+                    return View("Error");
+                }
+            } else {
+                Response.StatusCode = 500;
+                return View("Error");
+            }
+        }
     }
 }
