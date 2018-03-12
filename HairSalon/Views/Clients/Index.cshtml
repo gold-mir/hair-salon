@@ -7,9 +7,16 @@
 <ul>
     @foreach(var client in Model)
     {
-        <li><a href="/clients/@client.GetID()">@client.GetName()</a></li>
+        <li>
+        <a href="/clients/@client.GetID()">@client.GetName()</a>
+        <form class="" action="/clients/@client.GetID()/delete" method="post">
+            <button type="submit">Delete</button>
+        </form>
+        </li>
     }
 </ul>
-
+<form class="" action="/clients/clear" method="post">
+    <button type="submit" name="button">Clear Clients</button>
+</form>
 <a href="/clients/new">Add Clients</a><br>
 <a href="/">Back Home</a>

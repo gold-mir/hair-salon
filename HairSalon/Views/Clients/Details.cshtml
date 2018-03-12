@@ -7,5 +7,8 @@
 
 <h2>Seen by: <a href="/stylists/@stylist.GetID()">@(stylist.GetName())</a></h2>
 
+<form class="" action="/clients/@Model.GetID()/delete" method="post">
+    <button type="submit">Delete @Model.GetName()</button>
+</form>
 
 <a href="/clients">Back to Clients</a>

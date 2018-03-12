@@ -6,9 +6,12 @@
 <ul>
     @foreach(var stylist in Model)
     {
-        <li><a href="/stylists/@stylist.GetID()">@stylist.GetName()</a></li>
+        <li><a href="/stylists/@stylist.GetID()">@stylist.GetName()</a><form action="/stylists/@stylist.GetID()/delete" method="post"><button type="submit" name="button">Delete</button></form></li>
     }
 </ul>
 
+<form class="" action="/stylists/clear" method="post">
+    <button type="submit" name="button">Clear Stylists</button>
+</form>
 <a href="/stylists/new">Add a new Stylist</a><br>
 <a href="/">Back Home</a>

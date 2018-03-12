@@ -48,5 +48,25 @@ namespace HairSalon.Controllers
                 return View("NotFound");
             }
         }
+
+        [HttpPost("/clients/clear")]
+        public ActionResult Clear()
+        {
+            Client.DeleteAll();
+            return Redirect("/clients");
+        }
+
+        [HttpPost("/clients/{id}/delete")]
+        public ActionResult Delete(int id)
+        {
+            Client client = Client.GetByID(id);
+
+            if(client != null)
+            {
+                client.Delete();
+            }
+
+            return Redirect("/clients");
+        }
     }
 }
